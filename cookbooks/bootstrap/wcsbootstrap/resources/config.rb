@@ -26,10 +26,7 @@ action :config do
   end
 
   bash 'configure wcs' do
-    code <<-EOH
-    wcs compose down -v
-    env $(cat #{wcs_dir}/wcs.conf) #{wcs_dir}/community-stack/setups/linux_setup.sh
-    EOH
+    code "env $(cat #{wcs_dir}/wcs.conf) #{wcs_dir}/community-stack/setups/linux_setup.sh"
   end
 
 end

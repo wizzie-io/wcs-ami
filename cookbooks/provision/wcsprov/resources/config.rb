@@ -32,7 +32,6 @@ action :provision do
 
   bash 'remove dinamyc motd' do
     code "rm -f /etc/update-motd.d/*"
-    action :run
   end
 
   chef_gem 'aws-sdk-ec2' do
@@ -45,17 +44,19 @@ action :provision do
     action :checkout
   end
 
-  cookbook_file "#{wcs_dir}/wcs.conf" do
-    source 'wcs.conf'
+  file "#{wcs_dir}/.env" do
+    content ''
     owner 'root'
     group 'root'
     mode '0644'
-    action :create
   end
 
-  bash 'install wcs' do
-    code "env $(cat #{wcs_dir}/wcs.conf) #{wcs_dir}/community-stack/setups/linux_setup.sh"
-    action :run
+  bash 'pull wcs images' do
+    code <<-EOH
+    PREFIX=/usr/local docker-compose -f #{wcs_dir}/community-stack/compose/docker-compose.yaml build
+    PREFIX=/usr/local docker-compose -f #{wcs_dir}/community-stack/compose/docker-compose.yaml pull --ignore-pull-failures
+    rm -f #{wcs_dir}/.env
+    EOH
   end
 
   template '/etc/cloud/cloud.cfg.d/01-wdp.cfg' do
