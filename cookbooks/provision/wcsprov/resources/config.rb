@@ -40,7 +40,7 @@ action :provision do
 
   git "#{wcs_dir}/community-stack" do
     repository 'https://github.com/wizzie-io/community-stack.git'
-    revision '1.1.0'
+    revision node["wcs_version"]
     action :checkout
   end
 
