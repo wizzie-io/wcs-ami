@@ -22,6 +22,21 @@ action :provision do
     EOH
   end
 
+  apt_update
+  [ 'docker.io' ].each do |pack|
+    package pack do
+      action :install
+    end
+  end
+
+  bash 'install docker-compose' do
+    user 'root'
+    code <<-EOH
+    curl -s -L "https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose
+    chmod +x /usr/bin/docker-compose
+    EOH
+  end
+
   cookbook_file "/etc/motd" do
    source 'motd'
    owner 'root'
