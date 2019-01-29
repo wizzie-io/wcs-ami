@@ -6,13 +6,16 @@ default_action :config
 action :config do
 
   wcs_dir = '/usr/local/etc/wcs/ami'
+  wizzie_home = '/home/wizzie'
 
-  # user_data = {}
-  # begin
-  #   user_data = YAML.load_file('/var/lib/cloud/instance/user-data.txt')
-  # rescue => e
-  #   Chef::Log.error("Cannot read user-data: #{e.message}")
-  # end
+  bash 'create wizzie user' do
+   code <<-EOH
+   adduser wizzie --home #{wizzie_home} --shell /bin/bash --gecos "" --disabled-password
+   echo "wizzie ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/95-wizzie-users
+   cp -r /home/ubuntu/.ssh #{wizzie_home} && chown -R wizzie #{wizzie_home}/.ssh
+   sed -i 's/\\(.*\\)ubuntu\\(.*\\)/\\1wizzie\\2/g' /root/.ssh/authorized_keys
+   EOH
+  end
 
   template "#{wcs_dir}/wcs.conf" do
     source 'wcs.conf.erb'
