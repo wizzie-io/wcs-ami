@@ -1,13 +1,17 @@
 export AWS_MAX_ATTEMPTS = 360
 export AWS_POLL_DELAY_SECONDS = 10
 
-all: ami
+AMI = wcs-ami.json
 
-output-dir:
+.PHONY: all ami packer-validate
+
+all: packer-validate ami
+
+output:
 	mkdir -p output
 
-packer-validate:
-	packer validate wcs-ami.json
+packer-validate: $(AMI)
+	packer validate $^
 
-ami: packer-validate output-dir
-	packer build wcs-ami.json | tee output/packer.log
+ami: $(AMI) output
+	packer build $< | tee output/packer.log
