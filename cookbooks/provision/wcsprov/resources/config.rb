@@ -49,10 +49,6 @@ action :provision do
     code "rm -f /etc/update-motd.d/*"
   end
 
-  chef_gem 'aws-sdk-ec2' do
-    action :install
-  end
-
   git "#{wcs_dir}/community-stack" do
     repository 'https://github.com/wizzie-io/community-stack.git'
     revision node["wcs_version"]
