@@ -6,16 +6,6 @@ default_action :config
 action :config do
 
   wcs_dir = '/usr/local/etc/wcs/ami'
-  wizzie_home = '/home/wizzie'
-
-  bash 'create wizzie user' do
-   code <<-EOH
-   adduser wizzie --home #{wizzie_home} --shell /bin/bash --gecos "" --disabled-password
-   echo "wizzie ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/95-wizzie-users
-   cp -r /home/ubuntu/.ssh #{wizzie_home} && chown -R wizzie #{wizzie_home}/.ssh
-   sed -i 's/\\(.*\\)ubuntu\\(.*\\)/\\1wizzie\\2/g' /root/.ssh/authorized_keys
-   EOH
-  end
 
   template "#{wcs_dir}/wcs.conf" do
     source 'wcs.conf.erb'
