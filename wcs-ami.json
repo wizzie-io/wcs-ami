@@ -28,6 +28,15 @@
     }]
   }],
   "provisioners": [{
+    "type": "file",
+    "source": "./files/defaults.cfg",
+    "destination": "/tmp/defaults.cfg"
+  }, {
+    "type": "shell",
+    "inline": [
+      "sudo mv /tmp/defaults.cfg /etc/cloud/cloud.cfg.d/defaults.cfg"
+    ]
+  }, {
     "type": "shell",
     "inline": [
       "sudo mkdir -p /usr/local/etc/wcs/ami/bootstrap-cookbooks",
