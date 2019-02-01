@@ -70,8 +70,8 @@ action :provision do
     EOH
   end
 
-  template '/etc/cloud/cloud.cfg.d/01-wdp.cfg' do
-    source 'wdp-cloud-config.cfg.erb'
+  template '/etc/cloud/cloud.cfg.d/01-wcs.cfg' do
+    source 'wcs-cloud-config.cfg.erb'
     owner 'root'
     group 'root'
     mode '0644'
